@@ -1,0 +1,4 @@
+Bonjour !
+Voici le contenu du fichier test.txt.
+Ce texte s'affiche grace a votre programme C avec read et write.
+Bon code pour Get Next Line !
