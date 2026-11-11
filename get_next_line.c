@@ -10,70 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
+#include "get_next_line.h"
 
-#define BUFFER_SIZE 42
-
-int main(void)
+char	*ft_read_to_stash(int fd, char *stash)
 {
-	int	fd;
-	char	*ligne;
-
-	fd = open("test.txt", O_RDONLY);
-
-	ligne = get_next_line(fd);
-	printf("premier appel : %s", ligne);
-}
-
-char	*ft_strjoin_gnl(char *s1, char *s2)
+	char	*buffer;
+	int		bytes_read;
+	
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (buffer == NULL)
+	return (NULL);
+bytes_read = 1;
+while (bytes_read > 0 && ft_strchr_newline(stash) == 0)
 {
-
-}
-
-int	ft_strchr_newline(char *stash)
-{
-	int	i;
-
-	if (stash == NULL)
-		return (0);
-
-	i = 0;
-	while (stash[i] != '\0')
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read == -1)
 	{
-		if (stash[i] == '\n')
-			return (1);
-		i++;
+		free(buffer);
+		free(stash);
+		return (NULL);
 	}
-	return (0);
+	buffer[bytes_read] = '\0';
+	stash = ft_strjoin_gnl(stash, buffer);
 }
-
+free(buffer);
+return (stash);
+}
 
 char	*get_next_line(int fd)
 {
 	static char	*stash;
-	char		*buffer;
-	int			bytes_read;
-
+	char		*line;
+	
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (buffer == NULL)
-		return (NULL);
-	bytes_read = 1;
-	while (bytes_read > 0 && ft_strchr_newline(stash) == 0)
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(buffer);
-			free(stash);
-			stash = NULL;
-			return (NULL);
-		}
-		buffer[bytes_read] = '\0';
-		stash = ft_strjoin_gnl(stash, buffer);
-	}
-	free(buffer);
+	return (NULL);
+stash = ft_read_to_stash(fd, stash);
+if (!stash)
+return (NULL);
+line = ft_extract_line(stash);
+stash = ft_clean_stash(stash);
+return (line);
 }
