@@ -41,7 +41,7 @@ char	*ft_clean_stash(char *stash)
 	new_stash = malloc(sizeof(char) * (ft_strlen(stash) - i));
 	if (!new_stash)
 	{
-		free(stash);		
+		free(stash);
 		return (NULL);
 	}
 	i++;
@@ -87,7 +87,6 @@ int	ft_strchr_newline(char *stash)
 
 	if (stash == NULL)
 		return (0);
-
 	i = 0;
 	while (stash[i] != '\0')
 	{
@@ -117,7 +116,7 @@ char	*ft_extract_line(char *stash)
 	while (stash[i] && stash[i] != '\n')
 	{
 		line[i] = stash[i];
-		i++; 
+		i++;
 	}
 	if (stash[i] == '\n')
 		line[i++] = '\n';
